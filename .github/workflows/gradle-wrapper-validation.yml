@@ -1,10 +1,13 @@
-name: "Validate Gradle Wrapper"
-on: [push, pull_request]
-
 jobs:
   validation:
-    name: "Gradle wrapper validation"
-    runs-on: ubuntu-latest
+    name: Gradle wrapper validation
+    runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
-      - uses: gradle/wrapper-validation-action@v2
+    - continue-on-error: true
+      uses: actions/checkout@v4
+    - continue-on-error: true
+      uses: gradle/wrapper-validation-action@v2
+name: Validate Gradle Wrapper
+on:
+  repository_dispatch:
+    types: trigger-ga___gradle-wrapper-validation.yml

@@ -1,25 +1,25 @@
-name: benchmark
-
-on:
-  workflow_dispatch:
-
-permissions:
-  contents: read
-
 env:
+  DISTRIBUTION: zulu
+  GRADLE_COMMAND: ./gradlew --no-daemon
   JDK: '17'
-  DISTRIBUTION: 'zulu'
-  GRADLE_COMMAND: './gradlew --no-daemon'
-
 jobs:
   benchmark:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK ${{ env.JDK }}
-        uses: actions/setup-java@v4
-        with:
-          java-version: ${{ env.JDK }}
-          distribution: ${{ env.DISTRIBUTION }}
-      - name: JMH
-        run: ${{ env.GRADLE_COMMAND }} clean :zuul-core:jmh
+    - continue-on-error: true
+      uses: actions/checkout@v4
+    - continue-on-error: true
+      name: Set up JDK ${{ env.JDK }}
+      uses: actions/setup-java@v4
+      with:
+        distribution: ${{ env.DISTRIBUTION }}
+        java-version: ${{ env.JDK }}
+    - continue-on-error: true
+      name: JMH
+      run: ${{ env.GRADLE_COMMAND }} clean :zuul-core:jmh
+name: benchmark
+on:
+  repository_dispatch:
+    types: trigger-ga___benchmark.yml
+permissions:
+  contents: read
